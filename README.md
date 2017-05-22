@@ -15,7 +15,7 @@ However, we recognised that some data custodians manage multiple datasets that a
 ### *Option1. (ESRI SDE)*
 Data custodians that have access to ArcGIS can use the ESRI's arcpy python library to automate exporting of SDE datasets to either shapefile or file geodatabase. 
 
-The following code provides two function to export a SDE featureclass to either filegeodatabase or shapefile:
+The following code provides two python function to export a SDE featureclass to either a filegeodatabase or shapefile:
 ```python
 import arcpy
 import os
