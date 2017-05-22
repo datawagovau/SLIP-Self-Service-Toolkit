@@ -1,9 +1,15 @@
 import os
 import shutil
 import zipfile
-# Creates a zip file containing the input shapefile
-#   inShp: Full path to shapefile to be zipped
-#   Delete: Set to True to delete shapefile files after zip
+# Function Name: ZipShp()
+# Purpose:
+#   Creates a zip file containing the all the files associated with a shapefile
+#   The function will return the location of the zipped shapefile . ie (r'D:\selfservice\shapefile\DOT_Vavids.zip')
+#          
+# usage:
+#      ZipShp <inShapeFile> <Delete files after compression TRUEorFALSE> 
+#           ie ZipShp(r'D:\selfservice\shapefile\DOT_Vavids.shp', False)
+
 def ZipShp (inShp, Delete = True):
     #List of shapefile file extensions
     extensions = [".shp",".shx",".dbf",".sbn",".sbx",".fbn",".fbx",".ain",".aih",".atx",".ixs",".mxs",".prj",".xml",".cpg",".shp.xml"]

@@ -1,11 +1,14 @@
 import os
 import shutil
 import zipfile
-# Creates a zip file containing the all the files inside the filegeodatabase folder
-#   inShp: Full path to shapefile to be zipped
-#   Delete: Set to True to delete shapefile files after zip
-
-# Creates a zip file containing the contents of a filegeodatabase
+# Function Name: Zipfgdb()
+# Purpose:
+#   Creates a zip file containing the contents of a filegeodatabase ready for uploading into selfservice
+#   The function will return the location of the zipped file geodatabase. ie D:\selfservice\filegeodatabase.zip
+#          
+# usage:
+#      Zipfgdb <inFileGDB> <Delete filegeodatabase after compression TRUEorFALSE> 
+#           ie Zipfgdb(r'D:\selfservice\filegeodatabase.gdb', False)
 def Zipfgdb(inFileGDB, Delete = True):
     #Directory of file geodatabase
     inLocation = os.path.dirname (inFileGDB)
@@ -31,4 +34,4 @@ def Zipfgdb(inFileGDB, Delete = True):
     return zipfl
 
 #test zipping a geodatabase.
-print Zipfgdb(r'D:\selfservice\filegeodatabase.gdb', False)
+#print Zipfgdb(r'D:\selfservice\filegeodatabase.gdb', False)
