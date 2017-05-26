@@ -1,5 +1,6 @@
+SLIP Selfservice empowers data custodians by giving data custodians the power to self manage the frequency of data updates to SLIP. Streamlining the approval process of new datasets is 
 # SLIP-Self-Service-Toolkit
-The aim here is to provide generic scripts that data custodians will be able to easily understand and customise for their own organisational requirements. If you have a particular need or require further help with automating data ingestion into SLIP self-service please get in contact with us by emailing who@who.com.au. If you would like to help contribute to improving the tool kit please also get in touch.
+The aim here is to provide generic scripts that data custodians will be able to easily understand and customise for their own organisational requirements. If you have a particular need or require further help with automating data ingestion into SLIP self-service please get in contact with us by emailing salesandservice@landgate.wa.gov.au. If you would like to help contribute to improving the tool kit please also get in touch.
 
 To get you started we have created basic scripts that you can tailor to automate the following processes: 
 - Exporting data from common enterprise spatial environments into a supported SLIP self-service format. 
@@ -15,7 +16,7 @@ However, we recognised that some data custodians manage multiple datasets that a
 ### *Option1. (ESRI SDE)*
 Data custodians that have access to ArcGIS can use the ESRI's arcpy python library to automate exporting of SDE datasets to either shapefile or file geodatabase. 
 
-The following code provides two python function to export a SDE featureclass to either a filegeodatabase or shapefile:
+The following code provides two python functions to export a SDE featureclass to either a filegeodatabase or shapefile:
 ```python
 import arcpy
 import os

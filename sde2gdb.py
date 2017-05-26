@@ -9,7 +9,12 @@ import shutil
 #          
 # usage:
 #      sde2fgdb <SDE_Connection> <SDE_FC_Name> <path_to_output_fGDB> <fGDB_Name> <Output_FC_Name>
-def sde2fgdb(sde_connection,featureclass_name,output_path,fgdb_name,outFCname):
+#
+#
+# Author: Aaron Thorn        
+# Version : 0.1 26/5/2017   
+#
+def sde2gdb(sde_connection,featureclass_name,output_path,fgdb_name,outFCname):
     #establish sde connection workspace
     arcpy.env.workspace = sde_connection
     #does the geodatabase exist if so delete it
@@ -27,4 +32,4 @@ def sde2fgdb(sde_connection,featureclass_name,output_path,fgdb_name,outFCname):
 
 # Test fuction calls
 #test sde2fgdb <SDE_Connection> <SDE_FC_Name> <path_to_output_fGDB> <fGDB_Name> <Output_FC_Name>
-#print sde2fgdb(r'C:\AARON_DATA\Connection to PEAS71 - DISS - SDE.sde','GDB.W_IMAGERY_METADATA',r'C:\AARON_DATA','LGATE071','LGATE071')
+#print sde2fgdb(r'C:\AARON_DATA\Connection to PEAS71 - DISS - SDE.sde','GDB.W_IMAGERY_METADATA',r'C:\AARON_DATA','LG

@@ -5,10 +5,14 @@ import shutil
 # Function Name: sde2shp()
 # Purpose:
 #   Function to export a SDE feature class to a ESRI shapefile
-#   The function will return location of the file geodatabase. ie C:\AARON_DATA\LGATE071.shp
+#   The function will return the location of the shapefile. ie C:\AARON_DATA\LGATE071.shp
 #          
 # usage:
 #      sde2shp <SDE_Connection> <SDE_FC_Name> <output_path> <Output_shapefile_name>
+#
+# Author: Aaron Thorn        
+# Version : 0.1 26/5/2017   
+#
 def sde2shp(sde_connection,featureclass_name,output_path,outputSHPname):
     #establish sde connection workspace
     arcpy.env.workspace = sde_connection

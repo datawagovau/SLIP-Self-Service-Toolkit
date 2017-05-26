@@ -5,10 +5,12 @@ import zipfile
 # Purpose:
 #   Creates a zip file containing the contents of a filegeodatabase ready for uploading into selfservice
 #   The function will return the location of the zipped file geodatabase. ie D:\selfservice\filegeodatabase.zip
-#          
 # usage:
 #      Zipfgdb <inFileGDB> <Delete filegeodatabase after compression TRUEorFALSE> 
 #           ie Zipfgdb(r'D:\selfservice\filegeodatabase.gdb', False)
+#
+# Author: Aaron Thorn        
+# Version : 0.1 26/5/2017   
 def Zipfgdb(inFileGDB, Delete = True):
     #Directory of file geodatabase
     inLocation = os.path.dirname (inFileGDB)
