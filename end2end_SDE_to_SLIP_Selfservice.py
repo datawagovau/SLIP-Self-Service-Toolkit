@@ -1,6 +1,7 @@
 import sys, getopt
 from sde2gdb import sde2gdb
 from gdb2zip import Zipfgdb
+from upload2S3 import UploadFile
 import datetime,logging,traceback,arcpy,sys
 nowstart = datetime.datetime.now()
 YearMonthDay = nowstart.strftime("%Y_%m_%d_%H_%M_%S")
@@ -11,7 +12,7 @@ def setupLogging(logfilename) :
     newlogfilename = logfilename + YearMonthDay + '.log'
     logformatter = logging.Formatter('%(asctime)s [%(levelname)s] %(message)s')
     logger = logging.getLogger()
-    logger.setLevel(10) '10-Debug'
+    logger.setLevel(10) #'10-Debug'
     filehandler = logging.FileHandler(newlogfilename)
     filehandler.setFormatter(logformatter)
     logger.addHandler(filehandler)
@@ -19,7 +20,7 @@ def setupLogging(logfilename) :
     consolehandler.setFormatter(logformatter)
     logger.addHandler(consolehandler)
 
-def execute_job(SDE_CONNECTION,SDE_FEATURE_CLASS_NAME,TEMP_WORKING_DIRECTORY,SLIP_DATASET_NAME,AWS_CREDENTIAL_PROFILE):
+def execute_job(SDE_CONNECTION,SDE_FEATURE_CLASS_NAME,TEMP_WORKING_DIRECTORY,SLIP_DATASET_NAME,AWS_CREDENTIAL_PROFILE,AWS_S3_BUCKET,AWS_S3_FOLDER_KEY):
     try:
         logfile = TEMP_WORKING_DIRECTORY+ r'\\' + SLIP_DATASET_NAME + '_asat_'
         setupLogging(logfile)
@@ -33,6 +34,8 @@ def execute_job(SDE_CONNECTION,SDE_FEATURE_CLASS_NAME,TEMP_WORKING_DIRECTORY,SLI
         my_temp_zip = Zipfgdb(my_temp_filegdb)
         logging.info('Successfully created zip geodatabase [%s]' % my_temp_zip)
         logging.info('Uploading [%s] to S3' % my_temp_zip)
+        s3_uploadURL = UploadFile(my_temp_zip,AWS_S3_BUCKET,AWS_S3_FOLDER_KEY+my_temp_zip,AWS_CREDENTIAL_PROFILE)
+        logging.info('Successfully Uploading [%s] to S3' % my_temp_zip)
         logging.info("Completing program at " + str(datetime.datetime.now()))
         pass
     except arcpy.ExecuteError:
@@ -61,42 +64,50 @@ def main(argv):
     SDE_FEATURE_CLASS_NAME = ''
     SLIP_DATASET_NAME = ''
     AWS_CREDENTIAL_PROFILE = ''
+    AWS_S3_BUCKET = ''
+    AWS_S3_FOLDER_KEY = ''
     TEMP_WORKING_DIRECTORY = ''
+
     try:
-        opts, args = getopt.getopt(argv,'h',['sde=','ifc=','wd=','ofc=','aws='])
+        opts, args = getopt.getopt(argv,'h',['sde_Connection=','inputFeatureClass=','workingDir=','outputFeatureClass=','aws_profile=','S3_Bucket=','S3_FolderKey='])
 
     except getopt.GetoptError:
-        print ' --sde <SDE_Connection> --ifc <SDE_Input_FeatureClass_Name> --wd <Tempory_Working_Directory_used_to_store_logs_and_the_fgdb> --ofc <Output_Feature_Class_Name> --aws <AWS_Profile> '
+        print ' --sde_Connection <SDE_Connection> --inputFeatureClass <SDE_Input_FeatureClass_Name> --workingDir <Tempory_Working_Directory_used_to_store_logs_and_the_fgdb> --ofc <Output_Feature_Class_Name> --aws_profile <AWS_Profile> --S3_Bucket <AWS_Bucket> --S3_Key <AWS_folderKey'
         sys.exit(2)
 
     for opt, arg in opts:
         if opt == '-h':
-            print '--sde <SDE_Connection> --ifc <SDE_Input_FeatureClass_Name> --wd <Tempory_Working_Directory_used_to_store_logs_and_the_fgdb> --ofc <Output_Feature_Class_Name> --aws <AWS_Profile> '
+            print '--sde_Connection <SDE_Connection> --inputFeatureClass <SDE_Input_FeatureClass_Name> --workingDir <Tempory_Working_Directory_used_to_store_logs_and_the_fgdb> --ofc <Output_Feature_Class_Name> --aws_profile <AWS_Profile>  --S3_Bucket <AWS_Bucket> --S3_Key <AWS_folderKey'
             sys.exit()
-        elif opt == '--sde':
+        elif opt == '--sde_Connection':
             SDE_CONNECTION = arg
-        elif opt == '--ifc':
+        elif opt == '--inputFeatureClass':
             SDE_FEATURE_CLASS_NAME = arg
-        elif opt == '--wd':
+        elif opt == '--workingDir':
             TEMP_WORKING_DIRECTORY = arg
-        elif opt == '--ofc':
+        elif opt == '--outputFeatureClass':
             SLIP_DATASET_NAME = arg
-        elif opt == '--aws':
+        elif opt == '--aws_profile':
             AWS_CREDENTIAL_PROFILE = arg
+        elif opt == '--S3_Bucket':
+            AWS_S3_BUCKET = arg
+        elif opt == '--S3_FolderKey':
+            AWS_S3_FOLDERKEY = arg
+
     #check all flags have been populated
     if (SDE_CONNECTION == '' or SDE_FEATURE_CLASS_NAME == '' or SLIP_DATASET_NAME == '' or AWS_CREDENTIAL_PROFILE == '' or TEMP_WORKING_DIRECTORY == ''):
         print '#### Insufficent parameters provided ####'
-        print 'SDE_CONNECTION [%s]'%SDE_CONNECTION
-        print 'SDE_FEATURE_CLASS_NAME [%s]'%SDE_FEATURE_CLASS_NAME
-        print 'TEMP_WORKING_DIRECTORY [%s]'%TEMP_WORKING_DIRECTORY
-        print 'SLIP_DATASET_NAME [%s]'%SLIP_DATASET_NAME
-        print 'AWS_CREDENTIAL_PROFILE [%s]'%AWS_CREDENTIAL_PROFILE
-        print '\n\nRequired flags:'
-        print '--sde <SDE_Connection>\n --ifc <SDE_Input_FeatureClass_Name>\n --wd <Tempory_Working_Directory_used_to_store_logs_and_the_fgdb>\n --ofc <Output_Feature_Class_Name>\n --aws <AWS_Profile>\n '
+        print '--sde_Connection [%s] (ie. "C:\\selfservice_uploads\\Connection_to_PEAS71-DISS-SDE.sde " )'%SDE_CONNECTION
+        print '--inputFeatureClass [%s] (ie. "GDB.W_IMAGERY_METADATA" )'%SDE_FEATURE_CLASS_NAME
+        print '--workingDir [%s] (ie. "C:\\selfservice_uploads" )'%TEMP_WORKING_DIRECTORY
+        print '--outputFeatureClass [%s] (ie. "LGATE071" )'%SLIP_DATASET_NAME
+        print '--aws_profile [%s]( ie "SLIP_UAT_USER" )'%AWS_CREDENTIAL_PROFILE
+        print '--S3_Bucket [%s] (ie. "lg-slip-selfservice-data-uat" )'%AWS_S3_BUCKET
+        print '--S3_FolderKey [%s] (ie. "data-load//6//" )'%AWS_S3_FOLDER_KEY
         sys.exit(2)
     
     print 'executing job'
-    execute_job(SDE_CONNECTION,SDE_FEATURE_CLASS_NAME,TEMP_WORKING_DIRECTORY,SLIP_DATASET_NAME,AWS_CREDENTIAL_PROFILE)
+    execute_job(SDE_CONNECTION,SDE_FEATURE_CLASS_NAME,TEMP_WORKING_DIRECTORY,SLIP_DATASET_NAME,AWS_CREDENTIAL_PROFILE,AWS_S3_BUCKET,AWS_S3_FOLDER_KEY)
      
 
 if __name__ == "__main__":
