@@ -32,4 +32,4 @@ def sde2gdb(sde_connection,featureclass_name,output_path,fgdb_name,outFCname):
 
 # Test fuction calls
 #test sde2fgdb <SDE_Connection> <SDE_FC_Name> <path_to_output_fGDB> <fGDB_Name> <Output_FC_Name>
-#print sde2fgdb(r'C:\AARON_DATA\Connection to PEAS71 - DISS - SDE.sde','GDB.W_IMAGERY_METADATA',r'C:\AARON_DATA','LG
+#print sde2fgdb(r'C:\AARON_DATA\Connection to PEAS71 - DISS - SDE.sde','GDB.W_IMAGERY_METADATA',r'C:\AARON_DATA','mygdb.gdb','LGATE71')
